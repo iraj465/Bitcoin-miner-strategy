@@ -25,12 +25,24 @@ global MAXIMUM_BLOCK_WEIGHT
 MAXIMUM_BLOCK_WEIGHT = 4000000
 
 def create_block_file(blockTxns):
+  """Creates the block.txt file"""
   textfile = open("/content/block.txt", "w")
   for element in blockTxns:
     textfile.write(element + "\n")
   textfile. close()
 
+"""We define TXN density as:
+
+$\text{TXN density} = \frac{\text{TXN fee}}{\text{TXN size}}$
+
+where
+$\text{TXN size} = \frac{\text{TXN weight}}{\text{BLOCK_WEIGHT}}$
+
+Here, BLOCK_WEIGHT = 4000000
+"""
+
 def compute_helper_mempool_dictionaries():
+  """Computes helper dictionary and TXN density"""
   txn_density_dict = {}
   txn_parents_dict = {}
   txn_size_dict = {}
@@ -44,10 +56,12 @@ def compute_helper_mempool_dictionaries():
   return txn_density_dict,txn_parents_dict,txn_size_dict
 
 def order_TXN_density(txn_density_dict):
+  """Order Transactions based on descending TXN density"""
   sorted_txn_density = sorted(txn_density_dict.items(), key=lambda x: x[1], reverse=True)
   return sorted_txn_density
 
 def create_valid_block(sorted_txn_density,txn_parents_dict,txn_size_dict):
+  """This is where the magic happens"""
   currentBlockSize = 0
   blockTxns = []
   while(len(sorted_txn_density) != 0):
